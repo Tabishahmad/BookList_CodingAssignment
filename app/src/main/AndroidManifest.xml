@@ -14,21 +14,37 @@
         android:theme="@style/Theme.App.Starting"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".SplashActivityCompose"
+            android:exported="true"
+            android:label="@string/title_activity_splash_compose"
+            android:theme="@style/Theme.App.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".presentation.splash.SplashActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".presentation.FragmentContainerActivity"
-            android:theme="@style/App.Theme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/App.Theme">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
