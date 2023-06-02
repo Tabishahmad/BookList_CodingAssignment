@@ -1,4 +1,4 @@
-package com.example.bookapi.presentation.splash
+package com.example.bookapi.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,9 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.bookapi.presentation.splash.ui.theme.CodingAssignmentTheme
+import com.example.bookapi.presentation.list.BookListViewModel
+import com.example.bookapi.presentation.ui.theme.CodingAssignmentTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bookapi.presentation.core.NavigationGraph
+import dagger.hilt.android.AndroidEntryPoint
 
-class SplashActivityCompose : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -22,22 +27,23 @@ class SplashActivityCompose : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    NavigationGraph()
                 }
             }
         }
     }
 }
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    CodingAssignmentTheme {
-        Greeting("Android")
-    }
-}
+//
+//@Composable
+//fun Greeting(name: String) {
+//    val viewModel: BookListViewModel = viewModel()
+//    Text(text = "Hello $name!")
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    CodingAssignmentTheme {
+//        Greeting("Android")
+//    }
+//}

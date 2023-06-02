@@ -1,4 +1,4 @@
-package com.example.bookapi.presentation.splash.ui.theme
+package com.example.bookapi.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
