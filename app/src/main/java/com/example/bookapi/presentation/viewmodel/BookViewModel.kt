@@ -21,6 +21,9 @@ class BookViewModel @Inject constructor(private val useCase: UseCase, private va
     private val uiStateFlow = MutableStateFlow<ViewState<List<Book>>>(ViewState.Loading(true))
     fun getviewStateFlow(): StateFlow<ViewState<List<Book>>> = uiStateFlow
 
+    init {
+        fetchList()
+    }
 
     fun fetchList() {
         performCoroutineTask{

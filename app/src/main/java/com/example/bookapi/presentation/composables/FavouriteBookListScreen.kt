@@ -28,7 +28,7 @@ import com.example.bookapi.presentation.viewmodel.BookViewModel
 @Composable
 fun FavouriteBookListScreen(navController: NavController){
     Scaffold(
-        topBar = { SingleActionActionBar(){ handleFavClick(navController) } },
+        topBar = { TitleActionBar()},
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
                 FavouriteListContent(navController)
@@ -37,28 +37,25 @@ fun FavouriteBookListScreen(navController: NavController){
         bottomBar = {}
     )
 }
-private fun handleFavClick(navController: NavController){
 
-}
 
 @Composable
-fun FavouriteListContent(navController: NavController) {
+private fun FavouriteListContent(navController: NavController) {
     val viewModel : BookViewModel = hiltViewModel()
     val bookList by viewModel.getAllFavouriteBooks().collectAsState(initial = emptyList())
     FavouriteBookList(bookList = bookList, navController = navController)
 }
 @Composable
-fun FavouriteBookList(bookList : List<Book>,navController: NavController){
+private fun FavouriteBookList(bookList : List<Book>,navController: NavController){
     LazyVerticalGrid(columns = GridCells.Fixed(3)){
         items(bookList){book->
-            BookItem(book = book){
+            FavouriteBookItem(book = book){
                 openBookPreViewFavorite(book,navController)
             }
         }
     }
 }
 private fun openBookPreViewFavorite(book: Book,navController: NavController){
-    val bundle = bundleOf("book" to book)
     navController.currentBackStackEntry?.savedStateHandle?.set(
         key = "book",
         value = book
@@ -66,7 +63,7 @@ private fun openBookPreViewFavorite(book: Book,navController: NavController){
     navController.navigate(Screen.BookDetailPreviewScreen.route)
 }
 @Composable
-fun FavouriteBookItem(book: Book, onClick: () -> Unit) {
+private fun FavouriteBookItem(book: Book, onClick: () -> Unit) {
     Image(
         painter = rememberImagePainter(book.thumbnailUrl),
         contentDescription = book.bookTitle,

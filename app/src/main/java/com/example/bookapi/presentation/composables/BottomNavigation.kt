@@ -15,6 +15,10 @@ import com.example.bookapi.presentation.viewmodel.BookViewModel
 fun BottomNavigation(book: Book) {
     val viewModel : BookViewModel = hiltViewModel()
     var isFavorite by remember { mutableStateOf(book.isFav) }
+    viewModel.isFavoriteBook(book){
+        isFavorite = it
+    }
+
     BottomNavigation(
         backgroundColor = colorResource(id = R.color.purple_200),
         elevation = 3.dp){

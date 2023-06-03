@@ -26,7 +26,7 @@ fun BookDetailPreviewScreen(book: Book) {
     )
 }
 @Composable
-fun BookDetailPreviewContent(book: Book) {
+private fun BookDetailPreviewContent(book: Book) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
