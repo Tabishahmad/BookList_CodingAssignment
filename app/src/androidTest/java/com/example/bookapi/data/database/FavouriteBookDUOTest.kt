@@ -24,8 +24,8 @@ class FavouriteBookDUOTest : TestCase() {
 
 
 
-    private lateinit var favouriteBookDUO: FavouriteBookDUO
-    private lateinit var favouriteBookDatabase: FavouriteBookDatabase
+    private lateinit var favouriteBookDUO: FavouriteBooksDUO
+    private lateinit var favouriteBookDatabase: FavoriteBooksDatabase
 
     @get: Rule
     val dispatcherRule = TestDispatcherRule()
@@ -35,7 +35,7 @@ class FavouriteBookDUOTest : TestCase() {
 
         val context = ApplicationProvider.getApplicationContext<Context>()
         // initialize the db and dao variable
-        favouriteBookDatabase = Room.inMemoryDatabaseBuilder(context,FavouriteBookDatabase::class.java).build()
+        favouriteBookDatabase = Room.inMemoryDatabaseBuilder(context,FavoriteBooksDatabase::class.java).build()
         favouriteBookDUO = favouriteBookDatabase.favouriteBookDUO()
     }
 

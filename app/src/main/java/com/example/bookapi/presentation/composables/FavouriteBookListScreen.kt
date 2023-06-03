@@ -23,61 +23,50 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.bookapi.domain.model.Book
 import com.example.bookapi.presentation.core.Screen
-import com.example.bookapi.presentation.core.ViewState
 import com.example.bookapi.presentation.viewmodel.BookViewModel
 
 @Composable
-fun BookListScreen(navController: NavController){
+fun FavouriteBookListScreen(navController: NavController){
     Scaffold(
         topBar = { SingleActionActionBar(){ handleFavClick(navController) } },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                BookListContent(navController)
+                FavouriteListContent(navController)
             }
         },
         bottomBar = {}
     )
 }
 private fun handleFavClick(navController: NavController){
-    navController.navigate(Screen.FavouriteBookListScreen.route)
+
 }
 
 @Composable
-fun BookListContent(navController: NavController) {
+fun FavouriteListContent(navController: NavController) {
     val viewModel : BookViewModel = hiltViewModel()
-    viewModel.fetchList()
-    val uiState by viewModel.getviewStateFlow().collectAsState()
-    when (val bookListState = uiState) {
-        is ViewState.Loading -> {
-            // Show loading state
-        }
-        is ViewState.Success -> {
-            val bookList = bookListState.result
-            BookList(bookList = bookList, navController = navController)
-        }
-        is ViewState.Failure -> {
-            val errorMessage = bookListState.failMessage
-            // Show error state or handle error
-        }
-    }
- }
+    val bookList by viewModel.getAllFavouriteBooks().collectAsState(initial = emptyList())
+    FavouriteBookList(bookList = bookList, navController = navController)
+}
 @Composable
-fun BookList(bookList: List<Book>,navController: NavController){
+fun FavouriteBookList(bookList : List<Book>,navController: NavController){
     LazyVerticalGrid(columns = GridCells.Fixed(3)){
         items(bookList){book->
             BookItem(book = book){
-                val bundle = bundleOf("book" to book)
-                navController.currentBackStackEntry?.savedStateHandle?.set(
-                    key = "book",
-                    value = book
-                )
-                navController.navigate(Screen.BookDetailPreviewScreen.route)
+                openBookPreViewFavorite(book,navController)
             }
         }
     }
 }
+private fun openBookPreViewFavorite(book: Book,navController: NavController){
+    val bundle = bundleOf("book" to book)
+    navController.currentBackStackEntry?.savedStateHandle?.set(
+        key = "book",
+        value = book
+    )
+    navController.navigate(Screen.BookDetailPreviewScreen.route)
+}
 @Composable
-fun BookItem(book: Book, onClick: () -> Unit) {
+fun FavouriteBookItem(book: Book, onClick: () -> Unit) {
     Image(
         painter = rememberImagePainter(book.thumbnailUrl),
         contentDescription = book.bookTitle,

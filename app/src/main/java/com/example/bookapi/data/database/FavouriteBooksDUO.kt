@@ -1,15 +1,17 @@
 package com.example.bookapi.data.database
 
 import androidx.room.*
-import com.example.bookapi.common.TABLE_NAME
+import com.example.bookapi.common.DATABASE_TABLE_NAME
 import com.example.bookapi.domain.model.Book
-import kotlinx.coroutines.flow.Flow
 
-
+/**
+ * interface as a Data Access Object, it contains methods for
+ * interacting with the underlying database using the Room library.
+ */
 @Dao
-interface FavouriteBookDUO {
+interface FavouriteBooksDUO {
 
-    @Query("SELECT * FROM $TABLE_NAME")
+    @Query("SELECT * FROM $DATABASE_TABLE_NAME")
     suspend fun getAllFavoriteBooks(): List<Book>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -18,6 +20,6 @@ interface FavouriteBookDUO {
     @Delete
     suspend fun removeBookFromFavorites(book: Book)
 
-    @Query("SELECT * FROM $TABLE_NAME WHERE bookHashId = :bookId")
+    @Query("SELECT * FROM $DATABASE_TABLE_NAME WHERE bookHashId = :bookId")
     suspend fun getBook(bookId: String): Book
 }

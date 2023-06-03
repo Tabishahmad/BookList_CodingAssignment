@@ -1,11 +1,10 @@
 package com.example.bookapi.domain.usecase
 
 import com.example.bookapi.domain.model.Book
-import com.example.bookapi.domain.repository.DBRepository
-import kotlinx.coroutines.flow.Flow
+import com.example.bookapi.domain.repository.LocalDataBaseRepository
 import javax.inject.Inject
 
-class ManageBookFavoriteUseCase @Inject constructor(val dbRepository: DBRepository) {
+class ManageBookFavoriteUseCase @Inject constructor(val dbRepository: LocalDataBaseRepository) {
     suspend fun setBookFavorite(book: Book){
         dbRepository.setBookFavorite(book)
     }

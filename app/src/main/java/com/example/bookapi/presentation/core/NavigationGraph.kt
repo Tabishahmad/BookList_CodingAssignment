@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bookapi.domain.model.Book
+import com.example.bookapi.presentation.composables.BookDetailPreviewScreen
 import com.example.bookapi.presentation.composables.BookListScreen
+import com.example.bookapi.presentation.composables.FavouriteBookListScreen
 import com.example.bookapi.presentation.composables.SplashScreen
-import com.example.bookapi.presentation.core.base.Screen
 
 @Composable
 fun NavigationGraph() {
@@ -17,7 +19,16 @@ fun NavigationGraph() {
             SplashScreen(navController)
         }
         composable(Screen.BookListScreen.route){
-            BookListScreen()
+            BookListScreen(navController)
+        }
+        composable(Screen.BookDetailPreviewScreen.route){
+            val book = navController.previousBackStackEntry?.savedStateHandle?.get<Book>("book")
+            book?.let {
+                BookDetailPreviewScreen(book)
+            }
+        }
+        composable(Screen.FavouriteBookListScreen.route){
+            FavouriteBookListScreen(navController)
         }
     }
 }

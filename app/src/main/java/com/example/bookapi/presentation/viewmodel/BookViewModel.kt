@@ -1,9 +1,6 @@
-package com.example.bookapi.presentation.list
+package com.example.bookapi.presentation.viewmodel
 
 import android.content.Context
-import android.view.View
-import android.widget.ImageButton
-import androidx.lifecycle.ViewModel
 import com.example.bookapi.R
 import com.example.bookapi.domain.model.Book
 import com.example.bookapi.domain.model.NetworkResult
@@ -15,11 +12,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 
 @HiltViewModel
-class BookListViewModel @Inject constructor(private val useCase: UseCase, private val context: Context) :
+class BookViewModel @Inject constructor(private val useCase: UseCase, private val context: Context) :
     BaseViewModel() {
 
     private val uiStateFlow = MutableStateFlow<ViewState<List<Book>>>(ViewState.Loading(true))
@@ -39,17 +35,14 @@ class BookListViewModel @Inject constructor(private val useCase: UseCase, privat
 
 
 
-    fun handleFavoriteBook(view: View, book: Book) {
+    fun handleFavoriteBook(book: Book) {
         performCoroutineTask {
-            val button: ImageButton = view as ImageButton
             val isCurrentlyFav = book.isFav
             book.isFav = !isCurrentlyFav
             if (isCurrentlyFav) {
                 useCase.manageBookUseCase.removeBookFromFavorites(book)
-                button.setImageResource(R.drawable.ic_favorite_border)
             } else {
                 useCase.manageBookUseCase.setBookFavorite(book)
-                button.setImageResource(R.drawable.ic_favorite)
             }
         }
     }

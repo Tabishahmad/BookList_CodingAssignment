@@ -1,12 +1,12 @@
 package com.example.bookapi.hilt
 
 import android.content.Context
-import com.example.bookapi.data.repository.BookListRepositoryImpl
+import com.example.bookapi.data.repository.remote.BookListRepositoryImpl
 import com.example.bookapi.data.repository.remote.BookDataSource
-import com.example.bookapi.domain.repository.BookListRepository
-import com.example.bookapi.domain.repository.DBRepository
+import com.example.bookapi.domain.repository.RemoteBookListRepository
+import com.example.bookapi.domain.repository.LocalDataBaseRepository
 import com.example.bookapi.domain.usecase.UseCase
-import com.example.bookapi.domain.usecase.GetListUseCase
+import com.example.bookapi.domain.usecase.GetRemoteListUseCase
 import com.example.bookapi.domain.usecase.ManageBookFavoriteUseCase
 import dagger.Module
 import dagger.Provides
@@ -18,13 +18,13 @@ import dagger.hilt.android.components.ViewModelComponent
 class ViewModelModule {
 
     @Provides
-    fun provideIListRepository(dataSource: BookDataSource,context: Context): BookListRepository {
+    fun provideIListRepository(dataSource: BookDataSource,context: Context): RemoteBookListRepository {
         return BookListRepositoryImpl(dataSource,context)
     }
     @Provides
-    fun provideBookUseCase(bookListRepository: BookListRepository,
-                            dbRepository: DBRepository):UseCase{
-        return UseCase(GetListUseCase(bookListRepository),
+    fun provideBookUseCase(bookListRepository: RemoteBookListRepository,
+                           dbRepository: LocalDataBaseRepository):UseCase{
+        return UseCase(GetRemoteListUseCase(bookListRepository),
             ManageBookFavoriteUseCase(dbRepository))
     }
 }

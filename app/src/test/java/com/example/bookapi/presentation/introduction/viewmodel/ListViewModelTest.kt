@@ -7,7 +7,7 @@ import com.example.bookapi.domain.model.Book
 import com.example.bookapi.domain.model.NetworkResult
 import com.example.bookapi.domain.usecase.UseCase
 import com.example.bookapi.presentation.core.ViewState
-import com.example.bookapi.presentation.list.BookListViewModel
+import com.example.bookapi.presentation.viewmodel.BookViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.flow
@@ -23,7 +23,7 @@ import org.mockito.MockitoAnnotations
 
 internal class ListViewModelTest {
 
-    private lateinit var viewModel: BookListViewModel
+    private lateinit var viewModel: BookViewModel
 
     @Mock
     private lateinit var bookListUseCase: UseCase
@@ -35,7 +35,7 @@ internal class ListViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        viewModel = BookListViewModel(bookListUseCase,context)
+        viewModel = BookViewModel(bookListUseCase,context)
     }
 
     private fun getListRespose(): List<Book> {

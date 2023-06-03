@@ -1,15 +1,14 @@
-package com.example.bookapi.data.repository
+package com.example.bookapi.data.repository.remote
 
 import android.content.Context
 import com.example.bookapi.R
-import com.example.bookapi.data.repository.remote.BookDataSource
-import com.example.bookapi.domain.repository.BookListRepository
+import com.example.bookapi.domain.repository.RemoteBookListRepository
 import com.example.bookapi.domain.model.Book
 import com.example.bookapi.domain.model.NetworkResult
 import javax.inject.Inject
 
 class BookListRepositoryImpl @Inject
-        constructor(private val apiCall: BookDataSource,private val context: Context): BookListRepository {
+        constructor(private val apiCall: BookDataSource,private val context: Context): RemoteBookListRepository {
 
     override suspend fun getBookList(): NetworkResult<Book> {
         println("getBookList(): NetworkResult<Book>")

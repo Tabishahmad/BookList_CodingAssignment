@@ -2,11 +2,11 @@ package com.example.bookapi.hilt
 
 import android.content.Context
 import androidx.room.Room
-import com.example.bookapi.common.TABLE_NAME
-import com.example.bookapi.data.database.FavouriteBookDUO
-import com.example.bookapi.data.database.FavouriteBookDatabase
-import com.example.bookapi.data.repository.DBRepositoryImpl
-import com.example.bookapi.domain.repository.DBRepository
+import com.example.bookapi.common.DATABASE_TABLE_NAME
+import com.example.bookapi.data.database.FavouriteBooksDUO
+import com.example.bookapi.data.database.FavoriteBooksDatabase
+import com.example.bookapi.data.repository.RemoteDataBaseRepositoryImpl
+import com.example.bookapi.domain.repository.LocalDataBaseRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,19 +17,19 @@ import dagger.hilt.components.SingletonComponent
 @Module
 class DatabaseModule {
     @Provides
-    fun provideFavouriteBookDUO(favouriteBookDatabase: FavouriteBookDatabase): FavouriteBookDUO {
+    fun provideFavouriteBookDUO(favouriteBookDatabase: FavoriteBooksDatabase): FavouriteBooksDUO {
         return favouriteBookDatabase.favouriteBookDUO()
     }
     @Provides
-    fun provideDatabaseRepo(favouriteBookDUO: FavouriteBookDUO):DBRepository{
-        return DBRepositoryImpl(favouriteBookDUO)
+    fun provideDatabaseRepo(favouriteBookDUO: FavouriteBooksDUO):LocalDataBaseRepository{
+        return RemoteDataBaseRepositoryImpl(favouriteBookDUO)
     }
     @Provides
-    fun provideAppDatabase(@ApplicationContext appContext: Context): FavouriteBookDatabase {
+    fun provideAppDatabase(@ApplicationContext appContext: Context): FavoriteBooksDatabase {
         return Room.databaseBuilder(
             appContext,
-            FavouriteBookDatabase::class.java,
-            TABLE_NAME
+            FavoriteBooksDatabase::class.java,
+            DATABASE_TABLE_NAME
         ).build()
     }
 }
