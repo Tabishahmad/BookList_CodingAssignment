@@ -48,7 +48,9 @@ private fun handleFavClick(navController: NavController){
 @Composable
 private fun BookListContent(navController: NavController) {
     val viewModel : BookViewModel = hiltViewModel()
-
+    LaunchedEffect(true) {
+        viewModel.fetchList()
+    }
     val uiState by viewModel.getviewStateFlow().collectAsState()
     when (val bookListState = uiState) {
         is ViewState.Loading -> {
