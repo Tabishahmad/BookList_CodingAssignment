@@ -188,8 +188,6 @@ private fun ExitDialogComposable(navController: NavController) {
         )
     }
 
-    // Rest of your composable code
-
     // Back button press handler
     BackHandler {
         showExitDialog.value = true
