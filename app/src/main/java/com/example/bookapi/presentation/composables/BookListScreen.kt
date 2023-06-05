@@ -1,5 +1,6 @@
 package com.example.bookapi.presentation.composables
 
+import android.app.Activity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -78,52 +79,7 @@ private fun BookListContent(navController: NavController) {
             showFailureMessage(bookListState.failMessage)
         }
     }
-    val showDialog = remember { mutableStateOf(false) }
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-
-    DisposableEffect(Unit) {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showDialog.value = true
-            }
-        }
-        backPressedDispatcher?.addCallback(callback)
-
-        onDispose {
-            callback.remove()
-        }
-    }
-
-    if (showDialog.value) {
-        ExitDialogComposable(navController)
-    }
-//    val showDialog = remember { mutableStateOf(false) }
-//
-//    BackHandler(enabled = true) {
-//        showDialog.value = true
-//    }
-//
-//    LaunchedEffect(Unit) {
-//        if (showDialog.value) {
-//            ExitDialogComposable(navController)
-//        }
-//    }
-
-//    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-//    val showExitComposable = remember { mutableStateOf(false) }
-//
-//    // Handle back button press
-//    BackHandler(enabled = true, onBack = {
-//        // Perform actions on back button press
-//        // For example, navigate back or toggle the visibility of the composable
-//        showExitComposable.value = true
-//        ExitDialogComposable(navController)
-//    })
-//
-//    // Conditionally show the AnotherComposable based on the state value
-//    if (showExitComposable.value) {
-//        ExitDialogComposable(navController)
-//    }
+    ExitDialogComposable(navController)
  }
 
 @Composable
@@ -208,7 +164,7 @@ private fun Modifier.animateShimmer(): Modifier {
 @Composable
 private fun ExitDialogComposable(navController: NavController) {
     val showExitDialog = remember { mutableStateOf(false) }
-
+    val context = LocalContext.current
     if (showExitDialog.value) {
         AlertDialog(
             onDismissRequest = { showExitDialog.value = false },
@@ -217,6 +173,8 @@ private fun ExitDialogComposable(navController: NavController) {
             confirmButton = {
                 Button(onClick = {
                     // Handle exit action
+                    val activity = context as? Activity
+                    activity?.finish()
                     showExitDialog.value = false
                 }) {
                     Text("Exit")

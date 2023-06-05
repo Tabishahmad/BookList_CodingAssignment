@@ -53,7 +53,6 @@ fun BottomNavigation(book: Book) {
                 isFavorite = !isFavorite
                 // Handle favorite book logic
                 book?.let {
-                    println("click on handleFavoriteBook")
                     viewModel.handleFavoriteBook(book)
                 }
             }
