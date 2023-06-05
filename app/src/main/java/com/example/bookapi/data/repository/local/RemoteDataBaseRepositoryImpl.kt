@@ -14,7 +14,7 @@ class RemoteDataBaseRepositoryImpl @Inject constructor(private val favouriteBook
         favouriteBookDUO.removeBookFromFavorites(book)
     }
 
-    override suspend fun getBooksList(): List<Book> {
+    override suspend fun getFavouriteBooksList(): List<Book> {
         return favouriteBookDUO.getAllFavoriteBooks()
     }
 

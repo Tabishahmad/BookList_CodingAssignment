@@ -14,7 +14,7 @@ class ManageBookFavoriteUseCase @Inject constructor(val dbRepository: LocalDataB
     suspend fun isFavoriteBook(book: Book): Boolean {
         return dbRepository.getBook(book.bookHashId) != null
     }
-    suspend fun getBooksList(): List<Book> {
-        return dbRepository.getBooksList()
+    suspend fun getFavouriteBooksList(): List<Book> {
+        return dbRepository.getFavouriteBooksList()
     }
 }

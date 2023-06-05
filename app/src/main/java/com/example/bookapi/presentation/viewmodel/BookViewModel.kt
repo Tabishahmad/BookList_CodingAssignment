@@ -8,11 +8,12 @@ import com.example.bookapi.domain.usecase.UseCase
 import com.example.bookapi.presentation.core.ViewState
 import com.example.bookapi.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class BookViewModel @Inject constructor(private val useCase: UseCase, private val context: Context) :
@@ -20,10 +21,6 @@ class BookViewModel @Inject constructor(private val useCase: UseCase, private va
 
     private val uiStateFlow = MutableStateFlow<ViewState<List<Book>>>(ViewState.Loading(true))
     fun getviewStateFlow(): StateFlow<ViewState<List<Book>>> = uiStateFlow
-
-    init {
-        fetchList()
-    }
 
     fun fetchList() {
         performCoroutineTask{
@@ -50,10 +47,8 @@ class BookViewModel @Inject constructor(private val useCase: UseCase, private va
         }
     }
 
-    fun getAllFavouriteBooks(): Flow<List<Book>> {
-        return flow {
-            emit(useCase.manageBookUseCase.getBooksList())
-        }
+    suspend fun getAllFavouriteBooks(): List<Book> {
+        return useCase.manageBookUseCase.getFavouriteBooksList()
     }
 
     fun isFavoriteBook(book: Book, callback: (Boolean) -> Unit) {

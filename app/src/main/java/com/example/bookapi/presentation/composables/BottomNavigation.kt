@@ -15,8 +15,10 @@ import com.example.bookapi.presentation.viewmodel.BookViewModel
 fun BottomNavigation(book: Book) {
     val viewModel : BookViewModel = hiltViewModel()
     var isFavorite by remember { mutableStateOf(book.isFav) }
-    viewModel.isFavoriteBook(book){
-        isFavorite = it
+    LaunchedEffect(Unit) {
+        viewModel.isFavoriteBook(book) { isFav ->
+            isFavorite = isFav
+        }
     }
 
     BottomNavigation(
@@ -50,7 +52,10 @@ fun BottomNavigation(book: Book) {
             onClick = {
                 isFavorite = !isFavorite
                 // Handle favorite book logic
-                book?.let { viewModel.handleFavoriteBook(book) }
+                book?.let {
+                    println("click on handleFavoriteBook")
+                    viewModel.handleFavoriteBook(book)
+                }
             }
         )
     }

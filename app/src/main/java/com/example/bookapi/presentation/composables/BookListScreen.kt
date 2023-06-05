@@ -1,5 +1,8 @@
 package com.example.bookapi.presentation.composables
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,16 +12,18 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,6 +54,15 @@ private fun handleFavClick(navController: NavController){
 private fun BookListContent(navController: NavController) {
     val viewModel : BookViewModel = hiltViewModel()
 
+    //avoid calling on orientation changes
+    var hasFetched by rememberSaveable{ mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!hasFetched) {
+            viewModel.fetchList()
+            hasFetched = true
+        }
+    }
     val uiState by viewModel.getviewStateFlow().collectAsState()
     when (val bookListState = uiState) {
         is ViewState.Loading -> {
@@ -64,7 +78,54 @@ private fun BookListContent(navController: NavController) {
             showFailureMessage(bookListState.failMessage)
         }
     }
+    val showDialog = remember { mutableStateOf(false) }
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    DisposableEffect(Unit) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showDialog.value = true
+            }
+        }
+        backPressedDispatcher?.addCallback(callback)
+
+        onDispose {
+            callback.remove()
+        }
+    }
+
+    if (showDialog.value) {
+        ExitDialogComposable(navController)
+    }
+//    val showDialog = remember { mutableStateOf(false) }
+//
+//    BackHandler(enabled = true) {
+//        showDialog.value = true
+//    }
+//
+//    LaunchedEffect(Unit) {
+//        if (showDialog.value) {
+//            ExitDialogComposable(navController)
+//        }
+//    }
+
+//    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+//    val showExitComposable = remember { mutableStateOf(false) }
+//
+//    // Handle back button press
+//    BackHandler(enabled = true, onBack = {
+//        // Perform actions on back button press
+//        // For example, navigate back or toggle the visibility of the composable
+//        showExitComposable.value = true
+//        ExitDialogComposable(navController)
+//    })
+//
+//    // Conditionally show the AnotherComposable based on the state value
+//    if (showExitComposable.value) {
+//        ExitDialogComposable(navController)
+//    }
  }
+
 @Composable
 private fun showLoading(){
     // Show loading state
@@ -143,6 +204,38 @@ private fun Modifier.animateShimmer(): Modifier {
         )
     )
     return this.graphicsLayer(translationX = translateAnim)
+}
+@Composable
+private fun ExitDialogComposable(navController: NavController) {
+    val showExitDialog = remember { mutableStateOf(false) }
+
+    if (showExitDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog.value = false },
+            title = { Text("Exit Confirmation") },
+            text = { Text("Are you sure you want to exit?") },
+            confirmButton = {
+                Button(onClick = {
+                    // Handle exit action
+                    showExitDialog.value = false
+                }) {
+                    Text("Exit")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showExitDialog.value = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    // Rest of your composable code
+
+    // Back button press handler
+    BackHandler {
+        showExitDialog.value = true
+    }
 }
 
 

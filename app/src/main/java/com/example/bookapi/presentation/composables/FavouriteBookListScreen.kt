@@ -11,9 +11,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -24,6 +23,9 @@ import coil.compose.rememberImagePainter
 import com.example.bookapi.domain.model.Book
 import com.example.bookapi.presentation.core.Screen
 import com.example.bookapi.presentation.viewmodel.BookViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 
 @Composable
 fun FavouriteBookListScreen(navController: NavController){
@@ -41,10 +43,21 @@ fun FavouriteBookListScreen(navController: NavController){
 
 @Composable
 private fun FavouriteListContent(navController: NavController) {
-    val viewModel : BookViewModel = hiltViewModel()
-    val bookList by viewModel.getAllFavouriteBooks().collectAsState(initial = emptyList())
+    val viewModel: BookViewModel = hiltViewModel()
+    val bookListState: MutableState<List<Book>> = rememberSaveable{ mutableStateOf(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        val books = withContext(Dispatchers.IO) {
+            viewModel.getAllFavouriteBooks()
+        }
+        bookListState.value = books
+    }
+
+    val bookList: List<Book> = bookListState.value
     FavouriteBookList(bookList = bookList, navController = navController)
 }
+
+
 @Composable
 private fun FavouriteBookList(bookList : List<Book>,navController: NavController){
     LazyVerticalGrid(columns = GridCells.Fixed(3)){
